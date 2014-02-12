@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Node.js | Dev Soup]]></title>
   <link href="http://davidsevcik.github.io/blog/categories/node-dot-js/atom.xml" rel="self"/>
   <link href="http://davidsevcik.github.io/"/>
-  <updated>2014-02-12T14:06:14+01:00</updated>
+  <updated>2014-02-12T14:07:50+01:00</updated>
   <id>http://davidsevcik.github.io/</id>
   <author>
     <name><![CDATA[David Sevcik]]></name>
@@ -79,7 +79,7 @@ someAsyncCall(function(err) {
 
 <h1>Usage</h1>
 
-<p>I use Module Pattern as a basic building block in my Node.js apps. Fisrtly tt <strong>encapsulate data</strong> and provide the client of such module with just public API methods. For JavaScript this is the easiest way how to substitute the explicit public/private variables scoping. </p>
+<p>I use Module Pattern as a basic building block in my Node.js apps. Firstly it <strong>encapsulate data</strong> and provide the client of such module with just public API methods. For JavaScript this is the easiest way how to substitute the explicit public/private variables scoping. </p>
 
 <p>Secondly the Module Pattern <strong>incorporate the <a href="http://sourcemaking.com/design_patterns/factory_method">Factory Method</a> pattern</strong>. In the code example above the factory method <code>createInstance</code> plays role of simple constructor, for every call returns a new object instance. But we can use it also in case when we have limited poll of instances and we would like to provide client of the module with one from them. More about Factory Method pattern in Node.js you will find in a next blog post.</p>
 
