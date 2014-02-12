@@ -4,80 +4,82 @@
   <title><![CDATA[Category: Node.js | Dev Soup]]></title>
   <link href="http://davidsevcik.github.io/blog/categories/node-dot-js/atom.xml" rel="self"/>
   <link href="http://davidsevcik.github.io/"/>
-  <updated>2014-02-12T11:33:42+01:00</updated>
+  <updated>2014-02-12T14:06:14+01:00</updated>
   <id>http://davidsevcik.github.io/</id>
   <author>
     <name><![CDATA[David Sevcik]]></name>
-    
+    <email><![CDATA[david.sevcik@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
   
   <entry>
-    <title type="html"><![CDATA[Design Patterns in Node.js: Module Pattern]]></title>
+    <title type="html"><![CDATA[<small>Design Patterns in Node.js:</small> Module Pattern]]></title>
     <link href="http://davidsevcik.github.io/blog/2014/02/12/design-patterns-in-node-dot-js-module-pattern/"/>
     <updated>2014-02-12T10:17:20+01:00</updated>
     <id>http://davidsevcik.github.io/blog/2014/02/12/design-patterns-in-node-dot-js-module-pattern</id>
-    <content type="html"><![CDATA[<p>Today I start the series of blog spots dedicated to design patterns used in Node.js development. As developers you are probably familiar with the <a href="http://sourcemaking.com/design_patterns">GoF design patterns</a>. These work best with the programming languages using class inheritance but JavaScript belongs to the <a href="http://en.wikipedia.org/wiki/Prototype-based_programming">prototype-based</a> category of languages. Moreover the Node.js is specific for an asynchronism. Because of this I see useful to revise already known patterns from GoF and add some more specific to JavaScript or Node.js.</p>
+    <content type="html"><![CDATA[<p>Today I start the series of blog spots dedicated to design patterns used in Node.js development. As developers you are probably familiar with the <a href="http://sourcemaking.com/design_patterns">GoF design patterns</a>. These work best with the programming languages using class inheritance but JavaScript belongs to the <a href="http://en.wikipedia.org/wiki/Prototype-based_programming">prototype-based</a> category of languages. Moreover the Node.js is specific for an asynchronism. Because of this I see useful to revise already known patterns from GoF and add some more specific to JavaScript or Node.js. </p>
 
 <p>There is no order of particular patterns in this series. I plan to simply pick those which I use the most in my current projects. For start I have chose a Module Pattern.</p>
 
 <h1>Code first</h1>
 
-<h2>Synchronous version</h2>
+<p>&ldquo;`javascript Synchronous version
+var privateStaticVariable = &lsquo;sample&rsquo;;</p>
 
-<pre><code>exports.createInstance = function(context) {
-    var privateVariable = 10;
-
-    var privateFunction = function() {
-        return privateVariable * context.multiplier;           
-    }
-
-    var instance = {
-        publicVariable: 7,
-        publicFunction: function(x) {
-            return privateVariable + x;
-        },
-        chainableFunction: function(sum) {
-            privateVariable = instance.publicFunction(sum);
-            return instance;
-        }
-    }
-
-    return instance;
+<p>exports.createInstance = function(context) {
+    var privateVariable = 10;</p>
+<div class="highlight"><pre><code class="text">var privateFunction = function() {
+    return privateVariable * context.multiplier;           
 }
-</code></pre>
 
-<h2>Asynchronous version with callback</h2>
-
-<pre><code>exports.createInstance = function(context, callback) {
-    var privateVariable = 10;
-
-    var privateFunction = function() {
-        return privateVariable * context.multiplier;           
+var instance = {
+    publicVariable: 7,
+    publicFunction: function(x) {
+        return privateVariable + x;
+    },
+    chainableFunction: function(sum) {
+        privateVariable = instance.publicFunction(sum);
+        return instance;
     }
-
-    var instance = {
-        publicVariable: 7,
-        publicFunction: function(x) {
-            return privateVariable + x;
-        },
-        chainableFunction: function(sum) {
-            privateVariable = instance.publicFunction(sum);
-            return instance;
-        }
-    }
-
-    someAsyncCall(function(err) {
-        if (err) return callback(err);
-        return callback(null, instance);
-    });
 }
-</code></pre>
+
+return instance;
+</code></pre></div>
+<p>}
+&rdquo;`</p>
+
+<p>&ldquo;`javascript Asynchronous version with callback
+var privateStaticVariable = &lsquo;sample&rsquo;;</p>
+
+<p>exports.createInstance = function(context, callback) {
+    var privateVariable = 10;</p>
+<div class="highlight"><pre><code class="text">var privateFunction = function() {
+    return privateVariable * context.multiplier;           
+}
+
+var instance = {
+    publicVariable: 7,
+    publicFunction: function(x) {
+        return privateVariable + x;
+    },
+    chainableFunction: function(sum) {
+        privateVariable = instance.publicFunction(sum);
+        return instance;
+    }
+}
+
+someAsyncCall(function(err) {
+    if (err) return callback(err);
+    return callback(null, instance);
+});
+</code></pre></div>
+<p>}
+&rdquo;`</p>
 
 <h1>Usage</h1>
 
-<p>I use Module Pattern as a basic building block in my Node.js apps. Fisrtly tt <strong>encapsulate data</strong> and provide the client of such module with just public API methods. For JavaScript this is the easiest way how to substitute the explicit public/private variables scoping.</p>
+<p>I use Module Pattern as a basic building block in my Node.js apps. Fisrtly tt <strong>encapsulate data</strong> and provide the client of such module with just public API methods. For JavaScript this is the easiest way how to substitute the explicit public/private variables scoping. </p>
 
 <p>Secondly the Module Pattern <strong>incorporate the <a href="http://sourcemaking.com/design_patterns/factory_method">Factory Method</a> pattern</strong>. In the code example above the factory method <code>createInstance</code> plays role of simple constructor, for every call returns a new object instance. But we can use it also in case when we have limited poll of instances and we would like to provide client of the module with one from them. More about Factory Method pattern in Node.js you will find in a next blog post.</p>
 
@@ -86,7 +88,6 @@
 <ul>
 <li>Book <a href="http://www.amazon.com/JavaScript-Good-Parts-Douglas-Crockford/dp/0596517742">JavaScript: The Good Parts</a> by Douglas Crockford who popularized this pattern in JavaScript</li>
 </ul>
-
 ]]></content>
   </entry>
   
