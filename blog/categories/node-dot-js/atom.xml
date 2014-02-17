@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Node.js | Dev Soup]]></title>
   <link href="http://davidsevcik.github.io/blog/categories/node-dot-js/atom.xml" rel="self"/>
   <link href="http://davidsevcik.github.io/"/>
-  <updated>2014-02-12T14:07:50+01:00</updated>
+  <updated>2014-02-18T00:25:19+01:00</updated>
   <id>http://davidsevcik.github.io/</id>
   <author>
     <name><![CDATA[David Sevcik]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[<small>Design Patterns in Node.js:</small> Module Pattern]]></title>
-    <link href="http://davidsevcik.github.io/blog/2014/02/12/design-patterns-in-node-dot-js-module-pattern/"/>
+    <link href="http://davidsevcik.github.io/2014-02-12-design-patterns-node-js-module-pattern/"/>
     <updated>2014-02-12T10:17:20+01:00</updated>
-    <id>http://davidsevcik.github.io/blog/2014/02/12/design-patterns-in-node-dot-js-module-pattern</id>
+    <id>http://davidsevcik.github.io/design-patterns-node-js-module-pattern</id>
     <content type="html"><![CDATA[<p>Today I start the series of blog spots dedicated to design patterns used in Node.js development. As developers you are probably familiar with the <a href="http://sourcemaking.com/design_patterns">GoF design patterns</a>. These work best with the programming languages using class inheritance but JavaScript belongs to the <a href="http://en.wikipedia.org/wiki/Prototype-based_programming">prototype-based</a> category of languages. Moreover the Node.js is specific for an asynchronism. Because of this I see useful to revise already known patterns from GoF and add some more specific to JavaScript or Node.js. </p>
 
 <p>There is no order of particular patterns in this series. I plan to simply pick those which I use the most in my current projects. For start I have chose a Module Pattern.</p>
@@ -27,7 +27,8 @@
 <p>&ldquo;`javascript Synchronous version
 var privateStaticVariable = &lsquo;sample&rsquo;;</p>
 
-<p>exports.createInstance = function(context) {
+<p>// constructor function
+exports.createInstance = function(context) {
     var privateVariable = 10;</p>
 <div class="highlight"><pre><code class="text">var privateFunction = function() {
     return privateVariable * context.multiplier;           
@@ -52,7 +53,8 @@ return instance;
 <p>&ldquo;`javascript Asynchronous version with callback
 var privateStaticVariable = &lsquo;sample&rsquo;;</p>
 
-<p>exports.createInstance = function(context, callback) {
+<p>// constructor function
+exports.createInstance = function(context, callback) {
     var privateVariable = 10;</p>
 <div class="highlight"><pre><code class="text">var privateFunction = function() {
     return privateVariable * context.multiplier;           
@@ -77,12 +79,36 @@ someAsyncCall(function(err) {
 <p>}
 &rdquo;`</p>
 
-<h1>Usage</h1>
+<h1>Characteristics</h1>
 
-<p>I use Module Pattern as a basic building block in my Node.js apps. Firstly it <strong>encapsulate data</strong> and provide the client of such module with just public API methods. For JavaScript this is the easiest way how to substitute the explicit public/private variables scoping. </p>
+<p>Module Pattern comprise 2 from 4 major principles of object-oriented programming - the encapsulation and abstraction.</p>
 
-<p>Secondly the Module Pattern <strong>incorporate the <a href="http://sourcemaking.com/design_patterns/factory_method">Factory Method</a> pattern</strong>. In the code example above the factory method <code>createInstance</code> plays role of simple constructor, for every call returns a new object instance. But we can use it also in case when we have limited poll of instances and we would like to provide client of the module with one from them. More about Factory Method pattern in Node.js you will find in a next blog post.</p>
+<p>Firstly it <strong>encapsulate data</strong> and provide the client of such module with just public API methods. For JavaScript this is the easiest way how to substitute the explicit public/private variables scoping. </p>
 
+<p>Secondly the Module Pattern provide a <strong>layer of abstraction</strong>. It means that client using such module do not have to care about the process of the instantiation itself. He needs to know parameters of called <em>constructor function</em> and api of <em>returned instance</em>. This define an <em>interface</em> between client and module. If the interface remains the same it&rsquo;s implementation can evolve freely without change on a client.</p>
+
+<p>For example we can incorporate into Module Pattern another pattern called Factory Method. In the code example above the constructor method <code>createInstance</code> simply returns a new object instance for every call. But we can use Factory Method when we have a limited poll of instances and we would like to provide client with one from them. All this is change of the implementation but the interface for a client do not change. More about Factory Method pattern in Node.js you will find in a next blog post.</p>
+
+<h1>Usage example</h1>
+
+<p>I try to desing Node.js apps as a net of loosely coupled services. In such scheme every service is developed according Module Pattern and benefit from a uniform interface. In such case I use slightly modified vocabulary - <code>init</code> instead of <code>createInstance</code> and <code>api</code> instead of <code>instance</code>.</p>
+<div class="highlight"><pre><code class="javascript"><span class="nx">exports</span><span class="p">.</span><span class="nx">init</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">connection</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">api</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">list</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>  <span class="cm">/* implementation */</span>  <span class="p">},</span>
+        <span class="nx">create</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>  <span class="cm">/* implementation */</span>  <span class="p">},</span>
+        <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>  <span class="cm">/* implementation */</span>  <span class="p">},</span>
+        <span class="nx">destroy</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>  <span class="cm">/* implementation */</span>  <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nx">openSomeConnection</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">connection_</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="nx">connection</span> <span class="o">=</span> <span class="nx">connection_</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">api</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
 <h1>Further Reading</h1>
 
 <ul>
