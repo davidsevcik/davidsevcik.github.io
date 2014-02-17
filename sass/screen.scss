@@ -1,5 +1,6 @@
 @import "compass";
 @include global-reset;
+@include reset-html5;
 
 @import "custom/colors";
 @import "custom/fonts";
@@ -8,3 +9,9 @@
 @import "partials";
 @import "plugins/**/*";
 @import "custom/styles";
+
+
+article header h1 small {
+  font-size: 0.7em;
+  display: block;
+}
